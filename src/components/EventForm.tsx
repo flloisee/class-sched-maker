@@ -137,6 +137,7 @@ export default function EventForm({ onAdd, onUpdate, editingEvent, onCancelEdit 
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. Math 101"
+          autoFocus
         />
       </label>
 

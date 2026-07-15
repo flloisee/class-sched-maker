@@ -12,6 +12,7 @@ import "./PaperSizeModal.css";
 interface Props {
   events: CalendarEvent[];
   onSelectEvent: (event: CalendarEvent) => void;
+  onAddNew: () => void;
   title: string;
 }
 
@@ -46,7 +47,7 @@ function assignTracks(dayEntries: SlotEntry[]) {
   return { assignment, trackCount: tracks.length };
 }
 
-export default function WeeklySchedule({ events, onSelectEvent, title }: Props) {
+export default function WeeklySchedule({ events, onSelectEvent, onAddNew, title }: Props) {
   const scheduleRef = useRef<HTMLDivElement>(null);
   const [pdfModalOpen, setPdfModalOpen] = useState(false);
 
@@ -96,7 +97,7 @@ export default function WeeklySchedule({ events, onSelectEvent, title }: Props) 
 
   if (events.length === 0) {
     return (
-      <div className="schedule-empty">
+      <div className="schedule-empty" onClick={onAddNew} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter") onAddNew(); }}>
         <div className="schedule-empty-icon">+</div>
         <div>Add an event to see your weekly schedule.</div>
       </div>

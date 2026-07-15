@@ -15,6 +15,7 @@ export default function App() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const editingEvent = events.find((e) => e.id === editingId) ?? null;
+  const [formKey, setFormKey] = useState(0);
 
   function handleAdd(event: CalendarEvent) {
     setEvents((prev) => [...prev, event]);
@@ -45,7 +46,12 @@ export default function App() {
 
   function handleAddNew() {
     setEditingId(null);
-    setSheetView("form");
+    if (window.innerWidth > 768) {
+      setFormKey((k) => k + 1);
+    } else {
+      setSheetView("form");
+      setSheetOpen(true);
+    }
   }
 
   function handleCloseSheet() {
@@ -91,6 +97,7 @@ export default function App() {
 
       <div className="app-sidebar">
         <EventForm
+          key={formKey}
           onAdd={handleAdd}
           onUpdate={handleUpdate}
           editingEvent={editingEvent}
@@ -160,7 +167,7 @@ export default function App() {
       </div>
 
       <main className="app-main">
-        <WeeklySchedule events={events} onSelectEvent={handleSelectEvent} title={scheduleTitle} />
+        <WeeklySchedule events={events} onSelectEvent={handleSelectEvent} onAddNew={handleAddNew} title={scheduleTitle} />
       </main>
     </div>
   );
