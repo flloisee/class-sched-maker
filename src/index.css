@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #F7F6F2;
+  --surface: #EEECE6;
+  --surface-hover: #E4E1D8;
+  --text: #1F1E1C;
+  --text-secondary: #888277;
+  --text-tertiary: #B0AAA2;
+  --line: #D4D0C8;
+  --line-light: #E6E3DC;
+  --accent: #3B6EA5;
+  --accent-hover: #2D5A8C;
+  --accent-light: #E2EDF7;
+  --marker: #C9583A;
+  --marker-light: #F5E2DC;
+  --focus: rgba(59, 110, 165, 0.25);
+
+  --font-display: 'IBM Plex Serif', Georgia, serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SF Mono', monospace;
+
+  --text-sm: 0.6875rem;
+  --text-caption: 0.75rem;
+  --text-body: 0.875rem;
+  --text-label: 1rem;
+  --text-heading: 1.125rem;
+  --text-title: 1.375rem;
+
+  --radius: 6px;
+  --radius-sm: 4px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  font-weight: 600;
+}
+
+button {
+  font-family: inherit;
+}
+
+input, button, select, textarea {
+  font-size: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
