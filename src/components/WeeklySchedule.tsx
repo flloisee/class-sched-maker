@@ -1,5 +1,5 @@
 import { useRef, useMemo, useState } from "react";
-import type { CalendarEvent, Day } from "../types";
+import type { CalendarEvent, Day, TimeSlot } from "../types";
 import { DAYS } from "../types";
 import { parseTime, computeTimeRange, getHourLabels, formatTimeShort } from "../utils/time";
 import { exportAsPNG, exportAsPDF } from "../utils/export";
@@ -15,28 +15,31 @@ interface Props {
   title: string;
 }
 
-function assignTracks(dayEvents: CalendarEvent[]) {
-  const sorted = [...dayEvents].sort(
-    (a, b) => parseTime(a.startTime) - parseTime(b.startTime)
+type SlotEntry = { event: CalendarEvent; slot: TimeSlot; slotIndex: number };
+
+function assignTracks(dayEntries: SlotEntry[]) {
+  const sorted = [...dayEntries].sort(
+    (a, b) => parseTime(a.slot.startTime) - parseTime(b.slot.startTime),
   );
   const tracks: { end: number }[] = [];
   const assignment = new Map<string, number>();
 
-  for (const event of sorted) {
-    const start = parseTime(event.startTime);
-    const end = parseTime(event.endTime);
+  for (const entry of sorted) {
+    const start = parseTime(entry.slot.startTime);
+    const end = parseTime(entry.slot.endTime);
+    const key = `${entry.event.id}-${entry.slotIndex}`;
     let placed = false;
     for (let i = 0; i < tracks.length; i++) {
       if (tracks[i].end <= start) {
         tracks[i].end = end;
-        assignment.set(event.id, i);
+        assignment.set(key, i);
         placed = true;
         break;
       }
     }
     if (!placed) {
       tracks.push({ end });
-      assignment.set(event.id, tracks.length - 1);
+      assignment.set(key, tracks.length - 1);
     }
   }
 
@@ -56,7 +59,7 @@ export default function WeeklySchedule({ events, onSelectEvent, title }: Props) 
   const hourLabels = useMemo(() => getHourLabels(timeStart, timeEnd), [timeStart, timeEnd]);
 
   const eventsByDay = useMemo(() => {
-    const map: Record<Day, CalendarEvent[]> = {
+    const map: Record<Day, SlotEntry[]> = {
       Mon: [],
       Tue: [],
       Wed: [],
@@ -66,8 +69,10 @@ export default function WeeklySchedule({ events, onSelectEvent, title }: Props) 
       Sun: [],
     };
     for (const event of events) {
-      for (const day of event.days) {
-        map[day].push(event);
+      for (const [slotIndex, slot] of event.slots.entries()) {
+        for (const day of slot.days) {
+          map[day].push({ event, slot, slotIndex });
+        }
       }
     }
     return map;
@@ -111,14 +116,15 @@ export default function WeeklySchedule({ events, onSelectEvent, title }: Props) 
     return `rgb(${r},${g},${b})`;
   }
 
-  function getEventStyle(event: CalendarEvent, day: Day) {
-    const start = parseTime(event.startTime);
-    const end = parseTime(event.endTime);
+  function getEventStyle(entry: SlotEntry, day: Day) {
+    const { event, slot, slotIndex } = entry;
+    const start = parseTime(slot.startTime);
+    const end = parseTime(slot.endTime);
     const slotMinutes = totalMinutes + 60;
     const top = ((start - timeStart) / slotMinutes) * 100;
     const height = ((end - start) / slotMinutes) * 100;
     const { assignment, trackCount } = trackData[day];
-    const track = assignment.get(event.id) ?? 0;
+    const track = assignment.get(`${event.id}-${slotIndex}`) ?? 0;
     const width = 100 / trackCount;
     const left = track * width;
 
@@ -194,17 +200,17 @@ export default function WeeklySchedule({ events, onSelectEvent, title }: Props) 
               {hourLabels.map((t) => (
                 <div key={t} className="hour-row-line" />
               ))}
-              {eventsByDay[day].map((event) => (
+              {eventsByDay[day].map((entry) => (
                 <div
-                  key={event.id}
+                  key={`${entry.event.id}-${entry.slotIndex}`}
                   className="event-block"
-                  style={getEventStyle(event, day)}
-                  title={`${event.name}\n${formatTimeShort(parseTime(event.startTime))} – ${formatTimeShort(parseTime(event.endTime))}`}
-                  onClick={() => onSelectEvent(event)}
+                  style={getEventStyle(entry, day)}
+                  title={`${entry.event.name}\n${formatTimeShort(parseTime(entry.slot.startTime))} – ${formatTimeShort(parseTime(entry.slot.endTime))}`}
+                  onClick={() => onSelectEvent(entry.event)}
                 >
-                  <span className="event-block-name">{event.name}</span>
+                  <span className="event-block-name">{entry.event.name}</span>
                   <span className="event-block-time">
-                    {formatTimeShort(parseTime(event.startTime))} — {formatTimeShort(parseTime(event.endTime))}
+                    {formatTimeShort(parseTime(entry.slot.startTime))} — {formatTimeShort(parseTime(entry.slot.endTime))}
                   </span>
                 </div>
               ))}

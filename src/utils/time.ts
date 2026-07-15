@@ -32,10 +32,12 @@ export function computeTimeRange(events: CalendarEvent[]): TimeRange {
   let min = Infinity;
   let max = -Infinity;
   for (const e of events) {
-    const s = parseTime(e.startTime);
-    const en = parseTime(e.endTime);
-    if (s < min) min = s;
-    if (en > max) max = en;
+    for (const slot of e.slots) {
+      const s = parseTime(slot.startTime);
+      const en = parseTime(slot.endTime);
+      if (s < min) min = s;
+      if (en > max) max = en;
+    }
   }
 
   let start = min - 60;

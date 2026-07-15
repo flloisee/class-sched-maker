@@ -31,10 +31,11 @@ export default function EventList({ events, onDelete }: Props) {
               <div className="event-info">
                 <strong>{event.name}</strong>
                 <span className="event-meta">
-                  {formatTimeShort(parseTime(event.startTime))} –{" "}
-                  {formatTimeShort(parseTime(event.endTime))}
-                  {" · "}
-                  {event.days.join(", ")}
+                  {event.slots.map((slot, i) => (
+                    <span key={i} className="event-meta-slot">
+                      {slot.days.join(", ")} {formatTimeShort(parseTime(slot.startTime))}–{formatTimeShort(parseTime(slot.endTime))}
+                    </span>
+                  ))}
                 </span>
               </div>
               <button

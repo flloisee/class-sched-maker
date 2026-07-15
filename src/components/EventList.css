@@ -83,6 +83,11 @@
   color: var(--text-secondary);
 }
 
+.event-meta-slot {
+  display: block;
+  line-height: 1.5;
+}
+
 .btn-delete {
   background: none;
   border: none;

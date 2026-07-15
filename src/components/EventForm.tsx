@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { CalendarEvent, Day } from "../types";
+import type { CalendarEvent, Day, TimeSlot } from "../types";
 import { DAYS } from "../types";
 import { nextColor } from "../utils/colors";
 import "./EventForm.css";
@@ -13,11 +13,13 @@ interface Props {
   onCancelEdit: () => void;
 }
 
+function defaultSlot(): TimeSlot {
+  return { startTime: "09:00", endTime: "10:00", days: ["Mon"] };
+}
+
 export default function EventForm({ onAdd, onUpdate, editingEvent, onCancelEdit }: Props) {
   const [name, setName] = useState("");
-  const [startTime, setStartTime] = useState("09:00");
-  const [endTime, setEndTime] = useState("10:00");
-  const [days, setDays] = useState<Day[]>(["Mon"]);
+  const [slots, setSlots] = useState<TimeSlot[]>([defaultSlot()]);
   const [color, setColor] = useState(nextColor);
   const [hexInput, setHexInput] = useState(color);
   const [error, setError] = useState("");
@@ -31,18 +33,39 @@ export default function EventForm({ onAdd, onUpdate, editingEvent, onCancelEdit 
   useEffect(() => {
     if (editingEvent) {
       setName(editingEvent.name);
-      setStartTime(editingEvent.startTime);
-      setEndTime(editingEvent.endTime);
-      setDays([...editingEvent.days]);
+      setSlots(editingEvent.slots.map((s) => ({ ...s, days: [...s.days] })));
       setColor(editingEvent.color);
       setError("");
     }
   }, [editingEvent]);
 
-  function toggleDay(day: Day) {
-    setDays((prev) =>
-      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+  function updateSlot(index: number, field: keyof TimeSlot, value: TimeSlot[keyof TimeSlot]) {
+    setSlots((prev) =>
+      prev.map((s, i) => (i === index ? { ...s, [field]: value } : s)),
     );
+  }
+
+  function toggleDayInSlot(index: number, day: Day) {
+    setSlots((prev) =>
+      prev.map((s, i) =>
+        i === index
+          ? {
+              ...s,
+              days: s.days.includes(day)
+                ? s.days.filter((d) => d !== day)
+                : [...s.days, day],
+            }
+          : s,
+      ),
+    );
+  }
+
+  function addSlot() {
+    setSlots((prev) => [...prev, defaultSlot()]);
+  }
+
+  function removeSlot(index: number) {
+    setSlots((prev) => prev.filter((_, i) => i !== index));
   }
 
   function handleRandomColor() {
@@ -57,22 +80,26 @@ export default function EventForm({ onAdd, onUpdate, editingEvent, onCancelEdit 
       setError("Event name is required.");
       return;
     }
-    if (startTime >= endTime) {
-      setError("End time must be after start time.");
+    if (slots.length === 0) {
+      setError("Add at least one time range.");
       return;
     }
-    if (days.length === 0) {
-      setError("Select at least one day.");
-      return;
+    for (const [i, slot] of slots.entries()) {
+      if (slot.startTime >= slot.endTime) {
+        setError(`Time range #${i + 1}: end must be after start.`);
+        return;
+      }
+      if (slot.days.length === 0) {
+        setError(`Time range #${i + 1}: select at least one day.`);
+        return;
+      }
     }
 
     if (isEditing) {
       const updated: CalendarEvent = {
         ...editingEvent,
         name: name.trim(),
-        startTime,
-        endTime,
-        days: [...days],
+        slots: slots.map((s) => ({ ...s, days: [...s.days] })),
         color,
       };
       onUpdate(updated);
@@ -80,26 +107,20 @@ export default function EventForm({ onAdd, onUpdate, editingEvent, onCancelEdit 
       const event: CalendarEvent = {
         id: crypto.randomUUID(),
         name: name.trim(),
-        startTime,
-        endTime,
-        days: [...days],
+        slots: slots.map((s) => ({ ...s, days: [...s.days] })),
         color,
       };
       onAdd(event);
     }
 
     setName("");
-    setStartTime("09:00");
-    setEndTime("10:00");
-    setDays(["Mon"]);
+    setSlots([defaultSlot()]);
     setColor(nextColor());
   }
 
   function handleCancel() {
     setName("");
-    setStartTime("09:00");
-    setEndTime("10:00");
-    setDays(["Mon"]);
+    setSlots([defaultSlot()]);
     setColor(nextColor());
     setError("");
     onCancelEdit();
@@ -119,41 +140,62 @@ export default function EventForm({ onAdd, onUpdate, editingEvent, onCancelEdit 
         />
       </label>
 
-      <div className="time-inputs">
-        <label>
-          Start
-          <input
-            type="time"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-          />
-        </label>
-        <label>
-          End
-          <input
-            type="time"
-            value={endTime}
-            onChange={(e) => setEndTime(e.target.value)}
-          />
-        </label>
-      </div>
+      <span className="form-section-label">Time Ranges</span>
 
-      <div>
-        <span className="form-section-label">Days</span>
-        <div className="day-pills">
-          {DAYS.map((day) => (
-            <button
-              key={day}
-              type="button"
-              className="day-pill"
-              data-selected={days.includes(day)}
-              onClick={() => toggleDay(day)}
-            >
-              {day}
-            </button>
-          ))}
+      {slots.map((slot, index) => (
+        <div key={index} className="slot-block">
+          <div className="slot-header">
+            <span className="slot-label">Range #{index + 1}</span>
+            {slots.length > 1 && (
+              <button
+                type="button"
+                className="slot-remove"
+                onClick={() => removeSlot(index)}
+                title="Remove time range"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          <div className="time-inputs">
+            <label>
+              Start
+              <input
+                type="time"
+                value={slot.startTime}
+                onChange={(e) => updateSlot(index, "startTime", e.target.value)}
+              />
+            </label>
+            <label>
+              End
+              <input
+                type="time"
+                value={slot.endTime}
+                onChange={(e) => updateSlot(index, "endTime", e.target.value)}
+              />
+            </label>
+          </div>
+
+          <div className="day-pills">
+            {DAYS.map((day) => (
+              <button
+                key={day}
+                type="button"
+                className="day-pill"
+                data-selected={slot.days.includes(day)}
+                onClick={() => toggleDayInSlot(index, day)}
+              >
+                {day}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      ))}
+
+      <button type="button" className="add-slot-btn" onClick={addSlot}>
+        + Add time range
+      </button>
 
       <div className="color-row">
         <label>
