@@ -176,3 +176,24 @@
   text-overflow: ellipsis;
   line-height: 1.3;
 }
+
+@media (max-width: 768px) {
+  .schedule-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .schedule-header,
+  .schedule-body {
+    min-width: 640px;
+  }
+
+  .schedule-actions {
+    flex-wrap: wrap;
+  }
+
+  .schedule-title-display {
+    padding: 12px 14px 8px;
+    font-size: var(--text-body);
+  }
+}

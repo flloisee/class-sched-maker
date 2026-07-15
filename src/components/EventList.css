@@ -113,4 +113,16 @@
   line-height: 1.6;
 }
 
+@media (max-width: 768px) {
+  .event-list-item {
+    padding: 12px 10px;
+    min-height: 44px;
+  }
+
+  .btn-delete {
+    padding: 8px;
+    font-size: 1rem;
+  }
+}
+
 

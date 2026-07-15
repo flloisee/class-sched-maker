@@ -244,3 +244,42 @@
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 8%, transparent);
 }
+
+@media (max-width: 768px) {
+  .event-form {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .event-form input[type="text"],
+  .event-form input[type="time"] {
+    padding: 10px 12px;
+    min-height: 44px;
+  }
+
+  .btn-primary {
+    padding: 12px 18px;
+    min-height: 44px;
+  }
+
+  .btn-small {
+    padding: 8px 14px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .day-pill {
+    padding: 8px 14px;
+    min-height: 36px;
+  }
+
+  .hex-input {
+    padding: 8px;
+    min-height: 36px;
+  }
+
+  .slot-block {
+    padding: 10px;
+  }
+}

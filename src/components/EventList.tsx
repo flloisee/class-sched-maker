@@ -5,9 +5,10 @@ import "./EventList.css";
 interface Props {
   events: CalendarEvent[];
   onDelete: (id: string) => void;
+  onSelectEvent?: (event: CalendarEvent) => void;
 }
 
-export default function EventList({ events, onDelete }: Props) {
+export default function EventList({ events, onDelete, onSelectEvent }: Props) {
   return (
     <div className="event-list">
       <div className="event-list-header">
@@ -23,7 +24,7 @@ export default function EventList({ events, onDelete }: Props) {
       ) : (
         <ul>
           {events.map((event) => (
-            <li key={event.id} className="event-list-item">
+            <li key={event.id} className="event-list-item" onClick={() => onSelectEvent?.(event)} role="button" tabIndex={0}>
               <span
                 className="event-color-dot"
                 style={{ background: event.color }}
@@ -40,7 +41,7 @@ export default function EventList({ events, onDelete }: Props) {
               </div>
               <button
                 className="btn-delete"
-                onClick={() => onDelete(event.id)}
+                onClick={(e) => { e.stopPropagation(); onDelete(event.id); }}
                 title="Delete event"
               >
                 ✕

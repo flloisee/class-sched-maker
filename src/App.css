@@ -80,13 +80,144 @@
   color: var(--text);
 }
 
+.sheet-toggle {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 89;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 16px;
+  font-size: var(--text-caption);
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+  line-height: 1.4;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.sheet-toggle:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.sheet-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 30, 28, 0.4);
+  z-index: 90;
+  animation: fadeIn 0.2s ease;
+}
+
+.bottom-sheet {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 95;
+  background: var(--bg);
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  max-height: 65vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.bottom-sheet.open {
+  transform: translateY(0);
+}
+
+.sheet-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line);
+  margin: 8px auto 4px;
+  flex-shrink: 0;
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px 4px;
+  flex-shrink: 0;
+}
+
+.sheet-title {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.sheet-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.sheet-body {
+  padding: 12px 16px 20px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @media (max-width: 768px) {
   .app {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: auto 1fr;
   }
+
+  .app-header {
+    padding: 10px 14px;
+  }
+
+  .app-header::before {
+    height: 1.2em;
+  }
+
+  .app-title-input {
+    font-size: var(--text-heading);
+    min-width: 100px;
+  }
+
   .app-sidebar {
-    border-right: none;
-    border-bottom: 1px solid var(--line);
+    display: none;
+  }
+
+  .app-main {
+    padding: 14px 12px 20px;
+  }
+
+  .sheet-toggle {
+    display: inline-flex;
+  }
+
+  .sheet-backdrop {
+    display: block;
+  }
+
+  .bottom-sheet {
+    display: flex;
   }
 }
