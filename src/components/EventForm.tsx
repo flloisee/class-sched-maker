@@ -81,16 +81,16 @@ export default function EventForm({ onAdd, onUpdate, editingEvent, onCancelEdit 
       return;
     }
     if (slots.length === 0) {
-      setError("Add at least one time range.");
+      setError("Add at least one time slot.");
       return;
     }
     for (const [i, slot] of slots.entries()) {
       if (slot.startTime >= slot.endTime) {
-        setError(`Time range #${i + 1}: end must be after start.`);
+        setError(`Time slot #${i + 1}: end must be after start.`);
         return;
       }
       if (slot.days.length === 0) {
-        setError(`Time range #${i + 1}: select at least one day.`);
+        setError(`Time slot #${i + 1}: select at least one day.`);
         return;
       }
     }
@@ -141,7 +141,7 @@ export default function EventForm({ onAdd, onUpdate, editingEvent, onCancelEdit 
         />
       </label>
 
-      <span className="form-section-label">Time Ranges</span>
+      <span className="form-section-label">Time Slots</span>
 
       {slots.map((slot, index) => (
         <div key={index} className="slot-block">
@@ -152,7 +152,7 @@ export default function EventForm({ onAdd, onUpdate, editingEvent, onCancelEdit 
                 type="button"
                 className="slot-remove"
                 onClick={() => removeSlot(index)}
-                title="Remove time range"
+                title="Remove time slot"
               >
                 ✕
               </button>
@@ -195,7 +195,7 @@ export default function EventForm({ onAdd, onUpdate, editingEvent, onCancelEdit 
       ))}
 
       <button type="button" className="add-slot-btn" onClick={addSlot}>
-        + Add time range
+        + Add time slot
       </button>
 
       <div className="color-row">
