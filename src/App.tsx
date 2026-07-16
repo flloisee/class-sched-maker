@@ -36,7 +36,11 @@ export default function App() {
   function handleSelectEvent(event: CalendarEvent) {
     setEditingId(event.id);
     setSheetView("form");
-    setSheetOpen(true);
+    if (window.innerWidth <= 768) {
+      setSheetOpen(true);
+    } else {
+      setFormKey((k) => k + 1);
+    }
   }
 
   function handleCancelEdit() {
