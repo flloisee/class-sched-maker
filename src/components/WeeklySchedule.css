@@ -71,7 +71,7 @@
 .time-label-header {
   padding: 8px 8px;
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  font-size: var(--text-caption);
   font-weight: 500;
   color: var(--text-tertiary);
   text-align: center;
@@ -81,7 +81,7 @@
 .day-header {
   padding: 8px 4px;
   font-family: var(--font-body);
-  font-size: var(--text-caption);
+  font-size: var(--text-body);
   font-weight: 600;
   color: var(--text);
   text-align: center;
@@ -105,13 +105,13 @@
 }
 
 .time-slot-label {
-  height: 60px;
+  height: 84px;
   display: flex;
   align-items: flex-start;
   justify-content: center;
   padding-top: 3px;
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  font-size: var(--text-caption);
   color: var(--text-tertiary);
   border-bottom: 1px solid var(--line-light);
 }
@@ -131,7 +131,7 @@
 }
 
 .hour-row-line {
-  height: 60px;
+  height: 84px;
   border-bottom: 1px solid var(--line-light);
 }
 
@@ -159,7 +159,7 @@
 }
 
 .event-block-name {
-  font-size: var(--text-caption);
+  font-size: var(--text-body);
   font-weight: 600;
   color: var(--text);
   white-space: nowrap;
@@ -170,7 +170,7 @@
 
 .event-block-time {
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  font-size: var(--text-caption);
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
@@ -187,6 +187,7 @@
   .schedule-header,
   .schedule-body {
     min-width: 640px;
+    grid-template-columns: 80px repeat(7, 1fr);
   }
 
   .schedule-actions {
@@ -195,6 +196,27 @@
 
   .schedule-title-display {
     padding: 12px 14px 8px;
+    font-size: var(--text-body);
+  }
+
+  .time-slot-label {
+    height: 100px;
+    font-size: var(--text-body);
+  }
+
+  .hour-row-line {
+    height: 100px;
+  }
+
+  .day-header {
+    font-size: var(--text-label);
+  }
+
+  .event-block-name {
+    font-size: var(--text-label);
+  }
+
+  .event-block-time {
     font-size: var(--text-body);
   }
 }
