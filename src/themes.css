@@ -1,0 +1,601 @@
+/* ===== Theme definitions ===== */
+
+/* --- Default Light (matches existing :root) --- */
+[data-theme="default-light"] {
+  --bg: #F7F6F2;
+  --surface: #EEECE6;
+  --surface-hover: #E4E1D8;
+  --text: #1F1E1C;
+  --text-secondary: #888277;
+  --text-tertiary: #B0AAA2;
+  --line: #D4D0C8;
+  --line-light: #E6E3DC;
+  --accent: #3B6EA5;
+  --accent-hover: #2D5A8C;
+  --accent-light: #E2EDF7;
+  --marker: #C9583A;
+  --marker-light: #F5E2DC;
+  --focus: rgba(59, 110, 165, 0.25);
+  --bg-hex: #F7F6F2;
+  --backdrop: rgba(31, 30, 28, 0.4);
+}
+
+/* --- Default Dark --- */
+[data-theme="default-dark"] {
+  --bg: #1A1A18;
+  --surface: #262522;
+  --surface-hover: #302F2B;
+  --text: #E8E6DF;
+  --text-secondary: #9A958C;
+  --text-tertiary: #6B665E;
+  --line: #353430;
+  --line-light: #2A2926;
+  --accent: #5B8FC9;
+  --accent-hover: #7AA8DE;
+  --accent-light: #1E2D40;
+  --marker: #E07050;
+  --marker-light: #3A2018;
+  --focus: rgba(91, 143, 201, 0.3);
+  --bg-hex: #1A1A18;
+  --backdrop: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Ayu Light --- */
+[data-theme="ayu-light"] {
+  --bg: #FAFAFA;
+  --surface: #F0F0F0;
+  --surface-hover: #E8E8E8;
+  --text: #575757;
+  --text-secondary: #8C9199;
+  --text-tertiary: #B3B8BF;
+  --line: #D4D4D4;
+  --line-light: #E6E6E6;
+  --accent: #FF9940;
+  --accent-hover: #E6862E;
+  --accent-light: #FFF0E0;
+  --marker: #F07178;
+  --marker-light: #FCE8E8;
+  --focus: rgba(255, 153, 64, 0.25);
+  --bg-hex: #FAFAFA;
+  --backdrop: rgba(87, 87, 87, 0.35);
+}
+
+/* --- Ayu Mirage (dark) --- */
+[data-theme="ayu-dark"] {
+  --bg: #1A1F29;
+  --surface: #232834;
+  --surface-hover: #2E3341;
+  --text: #D9D7CE;
+  --text-secondary: #626A73;
+  --text-tertiary: #4D5560;
+  --line: #2E3440;
+  --line-light: #262B37;
+  --accent: #FF8F40;
+  --accent-hover: #FFA759;
+  --accent-light: #2D2216;
+  --marker: #FF3333;
+  --marker-light: #2D1616;
+  --focus: rgba(255, 143, 64, 0.3);
+  --bg-hex: #1A1F29;
+  --backdrop: rgba(0, 0, 0, 0.6);
+}
+
+/* --- GitHub Light (Primer) --- */
+[data-theme="github-light"] {
+  --bg: #FFFFFF;
+  --surface: #F6F8FA;
+  --surface-hover: #EEF1F5;
+  --text: #1F2328;
+  --text-secondary: #656D76;
+  --text-tertiary: #8C959F;
+  --line: #D0D7DE;
+  --line-light: #E8ECF0;
+  --accent: #0969DA;
+  --accent-hover: #0550AE;
+  --accent-light: #DDF4FF;
+  --marker: #CF222E;
+  --marker-light: #FFEBE9;
+  --focus: rgba(9, 105, 218, 0.3);
+  --bg-hex: #FFFFFF;
+  --backdrop: rgba(31, 35, 40, 0.4);
+}
+
+/* --- GitHub Dark (Primer) --- */
+[data-theme="github-dark"] {
+  --bg: #0D1117;
+  --surface: #161B22;
+  --surface-hover: #1C2128;
+  --text: #E6EDF3;
+  --text-secondary: #7D8590;
+  --text-tertiary: #6E7681;
+  --line: #30363D;
+  --line-light: #21262D;
+  --accent: #58A6FF;
+  --accent-hover: #79C0FF;
+  --accent-light: #0C2D6B;
+  --marker: #F85149;
+  --marker-light: #3D1115;
+  --focus: rgba(88, 166, 255, 0.3);
+  --bg-hex: #0D1117;
+  --backdrop: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Dracula Light (Alucard) --- */
+[data-theme="dracula-light"] {
+  --bg: #FFFBEB;
+  --surface: #DCDACB;
+  --surface-hover: #D0CEBF;
+  --text: #1F1F1F;
+  --text-secondary: #6C664B;
+  --text-tertiary: #8C8670;
+  --line: #CECCB9;
+  --line-light: #E3E0D1;
+  --accent: #8839EF;
+  --accent-hover: #6A1FE0;
+  --accent-light: #EFE0FF;
+  --marker: #CB3A2A;
+  --marker-light: #F5E0DC;
+  --focus: rgba(136, 57, 239, 0.25);
+  --bg-hex: #FFFBEB;
+  --backdrop: rgba(31, 31, 31, 0.4);
+}
+
+/* --- Dracula Dark --- */
+[data-theme="dracula-dark"] {
+  --bg: #282A36;
+  --surface: #383A4A;
+  --surface-hover: #424456;
+  --text: #F8F8F2;
+  --text-secondary: #6272A4;
+  --text-tertiary: #8188A6;
+  --line: #44475A;
+  --line-light: #3A3C4E;
+  --accent: #BD93F9;
+  --accent-hover: #D1A9FF;
+  --accent-light: #363251;
+  --marker: #FF5555;
+  --marker-light: #3A2328;
+  --focus: rgba(189, 147, 249, 0.3);
+  --bg-hex: #282A36;
+  --backdrop: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Catppuccin Latte --- */
+[data-theme="catppuccin-latte"] {
+  --bg: #EFF1F5;
+  --surface: #E6E9EF;
+  --surface-hover: #DCE0E8;
+  --text: #4C4F69;
+  --text-secondary: #5C5F77;
+  --text-tertiary: #6C6F85;
+  --line: #CCD0DA;
+  --line-light: #DCE0E8;
+  --accent: #8839EF;
+  --accent-hover: #6A1FE0;
+  --accent-light: #F2E6FF;
+  --marker: #D20F39;
+  --marker-light: #FCE8EE;
+  --focus: rgba(136, 57, 239, 0.25);
+  --bg-hex: #EFF1F5;
+  --backdrop: rgba(76, 79, 105, 0.35);
+}
+
+/* --- Catppuccin Mocha --- */
+[data-theme="catppuccin-mocha"] {
+  --bg: #1E1E2E;
+  --surface: #181825;
+  --surface-hover: #11111B;
+  --text: #CDD6F4;
+  --text-secondary: #BAC2DE;
+  --text-tertiary: #A6ADC8;
+  --line: #45475A;
+  --line-light: #313244;
+  --accent: #CBA6F7;
+  --accent-hover: #DDB8FF;
+  --accent-light: #2E2545;
+  --marker: #F38BA8;
+  --marker-light: #3D202E;
+  --focus: rgba(203, 166, 247, 0.25);
+  --bg-hex: #1E1E2E;
+  --backdrop: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Nord Light --- */
+[data-theme="nord-light"] {
+  --bg: #ECEFF4;
+  --surface: #E5E9F0;
+  --surface-hover: #D8DEE9;
+  --text: #2E3440;
+  --text-secondary: #4C566A;
+  --text-tertiary: #81A1C1;
+  --line: #D8DEE9;
+  --line-light: #E5E9F0;
+  --accent: #5E81AC;
+  --accent-hover: #81A1C1;
+  --accent-light: #D8E6ED;
+  --marker: #BF616A;
+  --marker-light: #F2E0E0;
+  --focus: rgba(94, 129, 172, 0.25);
+  --bg-hex: #ECEFF4;
+  --backdrop: rgba(46, 52, 64, 0.35);
+}
+
+/* --- Nord Dark --- */
+[data-theme="nord-dark"] {
+  --bg: #2E3440;
+  --surface: #3B4252;
+  --surface-hover: #434C5E;
+  --text: #ECEFF4;
+  --text-secondary: #D8DEE9;
+  --text-tertiary: #81A1C1;
+  --line: #434C5E;
+  --line-light: #3B4252;
+  --accent: #88C0D0;
+  --accent-hover: #8FBCBB;
+  --accent-light: #243544;
+  --marker: #BF616A;
+  --marker-light: #3B2A2E;
+  --focus: rgba(136, 192, 208, 0.3);
+  --bg-hex: #2E3440;
+  --backdrop: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Solarized Light --- */
+[data-theme="solarized-light"] {
+  --bg: #FDF6E3;
+  --surface: #EEE8D5;
+  --surface-hover: #E0D9C7;
+  --text: #586E75;
+  --text-secondary: #657B83;
+  --text-tertiary: #839496;
+  --line: #D6CFBE;
+  --line-light: #E8E1CE;
+  --accent: #268BD2;
+  --accent-hover: #2AA198;
+  --accent-light: #E0F0FF;
+  --marker: #DC322F;
+  --marker-light: #FCECEA;
+  --focus: rgba(38, 139, 210, 0.2);
+  --bg-hex: #FDF6E3;
+  --backdrop: rgba(88, 110, 117, 0.35);
+}
+
+/* --- Solarized Dark --- */
+[data-theme="solarized-dark"] {
+  --bg: #002B36;
+  --surface: #073642;
+  --surface-hover: #184551;
+  --text: #93A1A1;
+  --text-secondary: #657B83;
+  --text-tertiary: #586E75;
+  --line: #073642;
+  --line-light: #003542;
+  --accent: #268BD2;
+  --accent-hover: #2AA198;
+  --accent-light: #003643;
+  --marker: #DC322F;
+  --marker-light: #3B1C1C;
+  --focus: rgba(38, 139, 210, 0.3);
+  --bg-hex: #002B36;
+  --backdrop: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Atom One Light --- */
+[data-theme="one-light"] {
+  --bg: #FAFAFA;
+  --surface: #F0F0F0;
+  --surface-hover: #E8E8E8;
+  --text: #383A42;
+  --text-secondary: #696C77;
+  --text-tertiary: #9D9FA7;
+  --line: #D0D0D0;
+  --line-light: #E5E5E5;
+  --accent: #4078F2;
+  --accent-hover: #2A5FDB;
+  --accent-light: #E0EBFF;
+  --marker: #E45649;
+  --marker-light: #FCECEA;
+  --focus: rgba(64, 120, 242, 0.25);
+  --bg-hex: #FAFAFA;
+  --backdrop: rgba(56, 58, 66, 0.35);
+}
+
+/* --- Atom One Dark --- */
+[data-theme="one-dark"] {
+  --bg: #282C34;
+  --surface: #21252B;
+  --surface-hover: #2C313A;
+  --text: #ABB2BF;
+  --text-secondary: #5C6370;
+  --text-tertiary: #4B5263;
+  --line: #3E4452;
+  --line-light: #2C323C;
+  --accent: #61AFEF;
+  --accent-hover: #528BFF;
+  --accent-light: #2E3A50;
+  --marker: #E06C75;
+  --marker-light: #3E2530;
+  --focus: rgba(97, 175, 239, 0.3);
+  --bg-hex: #282C34;
+  --backdrop: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Tokyo Night Light --- */
+[data-theme="tokyo-light"] {
+  --bg: #E1E2E7;
+  --surface: #CBCCD1;
+  --surface-hover: #BFC0C5;
+  --text: #3760BF;
+  --text-secondary: #565F89;
+  --text-tertiary: #848CB5;
+  --line: #B4B5BA;
+  --line-light: #CBCCD1;
+  --accent: #3760BF;
+  --accent-hover: #2E50A0;
+  --accent-light: #D6E4FF;
+  --marker: #F52A5A;
+  --marker-light: #FCE0E8;
+  --focus: rgba(55, 96, 191, 0.2);
+  --bg-hex: #E1E2E7;
+  --backdrop: rgba(26, 27, 38, 0.35);
+}
+
+/* --- Tokyo Night Dark --- */
+[data-theme="tokyo-night"] {
+  --bg: #1A1B26;
+  --surface: #24283B;
+  --surface-hover: #2F3348;
+  --text: #C0CAF5;
+  --text-secondary: #565F89;
+  --text-tertiary: #444B6A;
+  --line: #33467C;
+  --line-light: #2A3A62;
+  --accent: #7AA2F7;
+  --accent-hover: #89B4FA;
+  --accent-light: #1E2E5A;
+  --marker: #F7768E;
+  --marker-light: #3D2032;
+  --focus: rgba(122, 162, 247, 0.3);
+  --bg-hex: #1A1B26;
+  --backdrop: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Gruvbox Light --- */
+[data-theme="gruvbox-light"] {
+  --bg: #FBF1C7;
+  --surface: #EBDBB2;
+  --surface-hover: #D5C4A1;
+  --text: #3C3836;
+  --text-secondary: #665C54;
+  --text-tertiary: #928374;
+  --line: #D5C4A1;
+  --line-light: #EBDBB2;
+  --accent: #458588;
+  --accent-hover: #689D6A;
+  --accent-light: #E8F0E8;
+  --marker: #CC241D;
+  --marker-light: #FCE8E8;
+  --focus: rgba(69, 133, 136, 0.25);
+  --bg-hex: #FBF1C7;
+  --backdrop: rgba(60, 56, 54, 0.35);
+}
+
+/* --- Gruvbox Dark --- */
+[data-theme="gruvbox-dark"] {
+  --bg: #282828;
+  --surface: #32302F;
+  --surface-hover: #3C3836;
+  --text: #EBDBB2;
+  --text-secondary: #A89984;
+  --text-tertiary: #928374;
+  --line: #504945;
+  --line-light: #3C3836;
+  --accent: #83A598;
+  --accent-hover: #8EC07C;
+  --accent-light: #2D3D38;
+  --marker: #CC241D;
+  --marker-light: #3C1818;
+  --focus: rgba(131, 165, 152, 0.3);
+  --bg-hex: #282828;
+  --backdrop: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Rosé Pine Dawn --- */
+[data-theme="rose-pine-dawn"] {
+  --bg: #FAF4ED;
+  --surface: #F0E9E0;
+  --surface-hover: #E6DFD3;
+  --text: #575279;
+  --text-secondary: #797593;
+  --text-tertiary: #9893A5;
+  --line: #D6D0C1;
+  --line-light: #E6DFD3;
+  --accent: #907AA9;
+  --accent-hover: #56949F;
+  --accent-light: #EFE6FF;
+  --marker: #B4637A;
+  --marker-light: #FCE8EE;
+  --focus: rgba(144, 122, 169, 0.25);
+  --bg-hex: #FAF4ED;
+  --backdrop: rgba(87, 82, 121, 0.35);
+}
+
+/* --- Rosé Pine --- */
+[data-theme="rose-pine"] {
+  --bg: #191724;
+  --surface: #1F1D2E;
+  --surface-hover: #26233A;
+  --text: #E0DEF4;
+  --text-secondary: #908CAA;
+  --text-tertiary: #6E6A86;
+  --line: #312F44;
+  --line-light: #26233A;
+  --accent: #C4A7E7;
+  --accent-hover: #9CCFD8;
+  --accent-light: #2A2740;
+  --marker: #EB6F92;
+  --marker-light: #3D242E;
+  --focus: rgba(196, 167, 231, 0.3);
+  --bg-hex: #191724;
+  --backdrop: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Monokai Light --- */
+[data-theme="monokai-light"] {
+  --bg: #F5F4ED;
+  --surface: #E8E6D8;
+  --surface-hover: #DAD8CA;
+  --text: #49483E;
+  --text-secondary: #898774;
+  --text-tertiary: #A8A693;
+  --line: #CDCBBA;
+  --line-light: #E0DECF;
+  --accent: #4688C4;
+  --accent-hover: #66D9EF;
+  --accent-light: #E0F0FF;
+  --marker: #F92672;
+  --marker-light: #FCE8F0;
+  --focus: rgba(70, 136, 196, 0.25);
+  --bg-hex: #F5F4ED;
+  --backdrop: rgba(73, 72, 62, 0.35);
+}
+
+/* --- Monokai Dark --- */
+[data-theme="monokai-dark"] {
+  --bg: #272822;
+  --surface: #2E2F28;
+  --surface-hover: #383830;
+  --text: #F8F8F2;
+  --text-secondary: #A6A68C;
+  --text-tertiary: #75715E;
+  --line: #49483E;
+  --line-light: #3E3D32;
+  --accent: #66D9EF;
+  --accent-hover: #A6E22E;
+  --accent-light: #2D3838;
+  --marker: #F92672;
+  --marker-light: #3E2030;
+  --focus: rgba(102, 217, 239, 0.3);
+  --bg-hex: #272822;
+  --backdrop: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Everforest Light --- */
+[data-theme="everforest-light"] {
+  --bg: #FDF6E3;
+  --surface: #F4F0D9;
+  --surface-hover: #EFEBD4;
+  --text: #5C6A72;
+  --text-secondary: #939F91;
+  --text-tertiary: #A6B0A0;
+  --line: #D5D0B8;
+  --line-light: #E6E2CC;
+  --accent: #8DA101;
+  --accent-hover: #35A77C;
+  --accent-light: #F0F5D9;
+  --marker: #F85552;
+  --marker-light: #FCE8E8;
+  --focus: rgba(141, 161, 1, 0.25);
+  --bg-hex: #FDF6E3;
+  --backdrop: rgba(92, 106, 114, 0.35);
+}
+
+/* --- Everforest Dark --- */
+[data-theme="everforest-dark"] {
+  --bg: #2D353B;
+  --surface: #343F44;
+  --surface-hover: #3D484D;
+  --text: #D3C6AA;
+  --text-secondary: #859289;
+  --text-tertiary: #7A8478;
+  --line: #475258;
+  --line-light: #3D484D;
+  --accent: #A7C080;
+  --accent-hover: #83C092;
+  --accent-light: #2D3D32;
+  --marker: #E67E80;
+  --marker-light: #3D2830;
+  --focus: rgba(167, 192, 128, 0.3);
+  --bg-hex: #2D353B;
+  --backdrop: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Light Owl --- */
+[data-theme="light-owl"] {
+  --bg: #FAFAFA;
+  --surface: #F0F0F0;
+  --surface-hover: #E5E5E5;
+  --text: #403F53;
+  --text-secondary: #7E8085;
+  --text-tertiary: #A0A2A8;
+  --line: #D0D0D0;
+  --line-light: #E5E5E5;
+  --accent: #4868C0;
+  --accent-hover: #5C7EDB;
+  --accent-light: #E0EBFF;
+  --marker: #E53935;
+  --marker-light: #FCECEA;
+  --focus: rgba(72, 104, 192, 0.25);
+  --bg-hex: #FAFAFA;
+  --backdrop: rgba(64, 63, 83, 0.35);
+}
+
+/* --- Night Owl --- */
+[data-theme="night-owl"] {
+  --bg: #011627;
+  --surface: #0B2136;
+  --surface-hover: #152A42;
+  --text: #D6DEEB;
+  --text-secondary: #637D99;
+  --text-tertiary: #4B6783;
+  --line: #1D3B53;
+  --line-light: #152A42;
+  --accent: #82AAFF;
+  --accent-hover: #ADD7FF;
+  --accent-light: #0D3048;
+  --marker: #EF5350;
+  --marker-light: #3D2028;
+  --focus: rgba(130, 170, 255, 0.3);
+  --bg-hex: #011627;
+  --backdrop: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Material Lighter --- */
+[data-theme="material-lighter"] {
+  --bg: #FAFAFA;
+  --surface: #FFFFFF;
+  --surface-hover: #F3F4F5;
+  --text: #546E7A;
+  --text-secondary: #94A7B0;
+  --text-tertiary: #B0BEC5;
+  --line: #D3E1E8;
+  --line-light: #E7E7E8;
+  --accent: #00BCD4;
+  --accent-hover: #26C6DA;
+  --accent-light: #E0F7FA;
+  --marker: #E53935;
+  --marker-light: #FFEBEE;
+  --focus: rgba(0, 188, 212, 0.25);
+  --bg-hex: #FAFAFA;
+  --backdrop: rgba(84, 110, 122, 0.35);
+}
+
+/* --- Material Palenight --- */
+[data-theme="material-palenight"] {
+  --bg: #292D3E;
+  --surface: #303348;
+  --surface-hover: #383E54;
+  --text: #A6ACCD;
+  --text-secondary: #676E95;
+  --text-tertiary: #54597A;
+  --line: #363B50;
+  --line-light: #303348;
+  --accent: #82AAFF;
+  --accent-hover: #89DDFF;
+  --accent-light: #2A3550;
+  --marker: #F07178;
+  --marker-light: #3D2838;
+  --focus: rgba(130, 170, 255, 0.3);
+  --bg-hex: #292D3E;
+  --backdrop: rgba(0, 0, 0, 0.6);
+}

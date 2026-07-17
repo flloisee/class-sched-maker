@@ -4,6 +4,7 @@ import { DAYS } from "../types";
 import { parseTime, computeTimeRange, getHourLabels, formatTimeShort } from "../utils/time";
 import { exportAsPNG, exportAsPDF } from "../utils/export";
 import { exportAsTemplate } from "../utils/template";
+import { colorForTheme } from "../utils/colors";
 import PaperSizeModal from "./PaperSizeModal";
 import type { PaperSize } from "./PaperSizeModal";
 import "./WeeklySchedule.css";
@@ -14,6 +15,7 @@ interface Props {
   onSelectEvent: (event: CalendarEvent) => void;
   onAddNew: () => void;
   title: string;
+  isDark: boolean;
 }
 
 type SlotEntry = { event: CalendarEvent; slot: TimeSlot; slotIndex: number };
@@ -47,7 +49,7 @@ function assignTracks(dayEntries: SlotEntry[]) {
   return { assignment, trackCount: tracks.length };
 }
 
-export default function WeeklySchedule({ events, onSelectEvent, onAddNew, title }: Props) {
+export default function WeeklySchedule({ events, onSelectEvent, onAddNew, title, isDark }: Props) {
   const scheduleRef = useRef<HTMLDivElement>(null);
   const [pdfModalOpen, setPdfModalOpen] = useState(false);
 
@@ -104,6 +106,10 @@ export default function WeeklySchedule({ events, onSelectEvent, onAddNew, title 
     );
   }
 
+  function getBgHex(): string {
+    return getComputedStyle(document.documentElement).getPropertyValue("--bg-hex").trim() || "#F7F6F2";
+  }
+
   function blendColor(hex: string, bgHex: string, alpha: number): string {
     const fr = parseInt(hex.slice(1, 3), 16);
     const fg = parseInt(hex.slice(3, 5), 16);
@@ -116,6 +122,8 @@ export default function WeeklySchedule({ events, onSelectEvent, onAddNew, title 
     const b = Math.round(fb * alpha + bb * (1 - alpha));
     return `rgb(${r},${g},${b})`;
   }
+
+  const bgHex = getBgHex();
 
   function getEventStyle(entry: SlotEntry, day: Day) {
     const { event, slot, slotIndex } = entry;
@@ -134,7 +142,7 @@ export default function WeeklySchedule({ events, onSelectEvent, onAddNew, title 
       height: `${height}%`,
       left: `${left}%`,
       width: `${width}%`,
-      "--event-block-bg": blendColor(event.color, "#F7F6F2", 0.22),
+      "--event-block-bg": blendColor(colorForTheme(event.color, isDark), bgHex, 0.22),
     } as React.CSSProperties;
   }
 

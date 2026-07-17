@@ -1,10 +1,14 @@
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
+function getThemeBgHex(): string {
+  return getComputedStyle(document.documentElement).getPropertyValue("--bg-hex").trim() || "#F7F6F2";
+}
+
 function withPadding(element: HTMLElement): HTMLElement {
   const wrapper = document.createElement("div");
   wrapper.style.padding = "3em";
-  wrapper.style.backgroundColor = "#ffffff";
+  wrapper.style.backgroundColor = getThemeBgHex();
   wrapper.style.width = `${Math.max(element.offsetWidth, 1100)}px`;
   wrapper.appendChild(element.cloneNode(true));
   return wrapper;
@@ -14,7 +18,7 @@ function renderWithPadding(element: HTMLElement): Promise<HTMLCanvasElement> {
   const wrapper = withPadding(element);
   document.body.appendChild(wrapper);
   return html2canvas(wrapper, {
-    backgroundColor: "#ffffff",
+    backgroundColor: getThemeBgHex(),
     scale: 2,
     useCORS: true,
   }).finally(() => {
@@ -40,6 +44,10 @@ export async function exportAsPDF(
   const pdf = new jsPDF("p", "mm", format);
   const pdfWidth = pdf.internal.pageSize.getWidth();
   const pdfHeight = pdf.internal.pageSize.getHeight();
+
+  const bgHex = getThemeBgHex();
+  pdf.setFillColor(bgHex);
+  pdf.rect(0, 0, pdfWidth, pdfHeight, "F");
 
   const scale = Math.min(pdfWidth / canvas.width, pdfHeight / canvas.height);
   const imgWidth = canvas.width * scale;
