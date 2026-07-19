@@ -440,6 +440,19 @@
   --backdrop: rgba(0, 0, 0, 0.6);
 }
 
+:root {
+  --picker-filter: none;
+}
+[data-theme$="-dark"] {
+  --picker-filter: invert(1);
+}
+[data-theme="night-owl"],
+[data-theme="rose-pine"],
+[data-theme="tokyo-night"],
+[data-theme="material-palenight"] {
+  --picker-filter: invert(1);
+}
+
 /* --- Monokai Light --- */
 [data-theme="monokai-light"] {
   --bg: #F5F4ED;

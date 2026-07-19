@@ -41,6 +41,10 @@
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
+.event-form input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: var(--picker-filter, none);
+}
+
 .event-form input[type="text"]:focus,
 .event-form input[type="time"]:focus {
   border-color: var(--accent);
