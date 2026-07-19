@@ -22,10 +22,17 @@ const DARK_PALETTE = [
 
 let index = 0;
 
+function normalizeHex(hex: string): string {
+  const h = hex.replace(/^#/, "");
+  if (h.length === 3) return `#${h[0]}${h[0]}${h[1]}${h[1]}${h[2]}${h[2]}`;
+  return `#${h}`;
+}
+
 function hexToHSL(hex: string): { h: number; s: number; l: number } {
-  const r = parseInt(hex.slice(1, 3), 16) / 255;
-  const g = parseInt(hex.slice(3, 5), 16) / 255;
-  const b = parseInt(hex.slice(5, 7), 16) / 255;
+  const hx = normalizeHex(hex);
+  const r = parseInt(hx.slice(1, 3), 16) / 255;
+  const g = parseInt(hx.slice(3, 5), 16) / 255;
+  const b = parseInt(hx.slice(5, 7), 16) / 255;
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
   const d = max - min;

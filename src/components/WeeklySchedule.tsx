@@ -110,13 +110,21 @@ export default function WeeklySchedule({ events, onSelectEvent, onAddNew, title,
     return getComputedStyle(document.documentElement).getPropertyValue("--bg-hex").trim() || "#F7F6F2";
   }
 
+  function normalizeHex(hex: string): string {
+    const h = hex.replace(/^#/, "");
+    if (h.length === 3) return `#${h[0]}${h[0]}${h[1]}${h[1]}${h[2]}${h[2]}`;
+    return `#${h}`;
+  }
+
   function blendColor(hex: string, bgHex: string, alpha: number): string {
-    const fr = parseInt(hex.slice(1, 3), 16);
-    const fg = parseInt(hex.slice(3, 5), 16);
-    const fb = parseInt(hex.slice(5, 7), 16);
-    const br = parseInt(bgHex.slice(1, 3), 16);
-    const bg = parseInt(bgHex.slice(3, 5), 16);
-    const bb = parseInt(bgHex.slice(5, 7), 16);
+    const f = normalizeHex(hex);
+    const bk = normalizeHex(bgHex);
+    const fr = parseInt(f.slice(1, 3), 16);
+    const fg = parseInt(f.slice(3, 5), 16);
+    const fb = parseInt(f.slice(5, 7), 16);
+    const br = parseInt(bk.slice(1, 3), 16);
+    const bg = parseInt(bk.slice(3, 5), 16);
+    const bb = parseInt(bk.slice(5, 7), 16);
     const r = Math.round(fr * alpha + br * (1 - alpha));
     const g = Math.round(fg * alpha + bg * (1 - alpha));
     const b = Math.round(fb * alpha + bb * (1 - alpha));
