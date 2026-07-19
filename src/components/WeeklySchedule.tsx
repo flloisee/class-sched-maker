@@ -142,7 +142,7 @@ export default function WeeklySchedule({ events, onSelectEvent, onAddNew, title,
       height: `${height}%`,
       left: `${left}%`,
       width: `${width}%`,
-      "--event-block-bg": blendColor(colorForTheme(event.color, isDark), bgHex, 0.22),
+      "--event-block-bg": blendColor(colorForTheme(event.color, isDark), bgHex, isDark ? 0.22 : 0.30),
     } as React.CSSProperties;
   }
 
