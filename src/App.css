@@ -1,7 +1,7 @@
 .app {
   height: 100vh;
   display: grid;
-  grid-template-columns: 420px 1fr;
+  grid-template-columns: 360px 1fr;
   grid-template-rows: auto 1fr;
   overflow: hidden;
 }
@@ -107,7 +107,7 @@
 }
 
 .app-main {
-  padding: 24px 28px 28px;
+  padding: 20px 20px 24px;
   overflow: auto;
   background: var(--bg);
 }
