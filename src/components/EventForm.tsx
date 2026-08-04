@@ -19,6 +19,7 @@ function defaultSlot(): TimeSlot {
 
 export default function EventForm({ onAdd, onUpdate, editingEvent, onCancelEdit }: Props) {
   const [name, setName] = useState("");
+  const [professor, setProfessor] = useState("");
   const [slots, setSlots] = useState<TimeSlot[]>([defaultSlot()]);
   const [color, setColor] = useState(nextColor);
   const [hexInput, setHexInput] = useState(color);
@@ -33,6 +34,7 @@ export default function EventForm({ onAdd, onUpdate, editingEvent, onCancelEdit 
   useEffect(() => {
     if (editingEvent) {
       setName(editingEvent.name);
+      setProfessor(editingEvent.professor ?? "");
       setSlots(editingEvent.slots.map((s) => ({ ...s, days: [...s.days] })));
       setColor(editingEvent.color);
       setError("");
@@ -101,6 +103,7 @@ export default function EventForm({ onAdd, onUpdate, editingEvent, onCancelEdit 
         name: name.trim(),
         slots: slots.map((s) => ({ ...s, days: [...s.days] })),
         color,
+        professor: professor.trim() || undefined,
       };
       onUpdate(updated);
     } else {
@@ -109,17 +112,20 @@ export default function EventForm({ onAdd, onUpdate, editingEvent, onCancelEdit 
         name: name.trim(),
         slots: slots.map((s) => ({ ...s, days: [...s.days] })),
         color,
+        professor: professor.trim() || undefined,
       };
       onAdd(event);
     }
 
     setName("");
+    setProfessor("");
     setSlots([defaultSlot()]);
     setColor(nextColor());
   }
 
   function handleCancel() {
     setName("");
+    setProfessor("");
     setSlots([defaultSlot()]);
     setColor(nextColor());
     setError("");
@@ -138,6 +144,16 @@ export default function EventForm({ onAdd, onUpdate, editingEvent, onCancelEdit 
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. Math 101"
           autoFocus
+        />
+      </label>
+
+      <label>
+        Professor (optional)
+        <input
+          type="text"
+          value={professor}
+          onChange={(e) => setProfessor(e.target.value)}
+          placeholder="e.g. Dr. Smith"
         />
       </label>
 

@@ -20,6 +20,10 @@ interface Props {
 
 type SlotEntry = { event: CalendarEvent; slot: TimeSlot; slotIndex: number };
 
+function titleCase(str: string): string {
+  return str.replace(/\S+/g, (w) => w[0].toUpperCase() + w.slice(1).toLowerCase());
+}
+
 function assignTracks(dayEntries: SlotEntry[]) {
   const sorted = [...dayEntries].sort(
     (a, b) => parseTime(a.slot.startTime) - parseTime(b.slot.startTime),
@@ -222,13 +226,16 @@ export default function WeeklySchedule({ events, onSelectEvent, onAddNew, title,
                   key={`${entry.event.id}-${entry.slotIndex}`}
                   className="event-block"
                   style={getEventStyle(entry, day)}
-                  title={`${entry.event.name}\n${formatTimeShort(parseTime(entry.slot.startTime))} – ${formatTimeShort(parseTime(entry.slot.endTime))}`}
+                  title={`${entry.event.name}${entry.event.professor ? `\nProf. ${titleCase(entry.event.professor)}` : ""}\n${formatTimeShort(parseTime(entry.slot.startTime))} – ${formatTimeShort(parseTime(entry.slot.endTime))}`}
                   onClick={() => onSelectEvent(entry.event)}
                 >
                   <span className="event-block-name">{entry.event.name}</span>
                   <span className="event-block-time">
                     {formatTimeShort(parseTime(entry.slot.startTime))} — {formatTimeShort(parseTime(entry.slot.endTime))}
                   </span>
+                  {entry.event.professor && (
+                    <span className="event-block-professor">Prof. {titleCase(entry.event.professor)}</span>
+                  )}
                 </div>
               ))}
             </div>

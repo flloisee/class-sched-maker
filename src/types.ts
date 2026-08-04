@@ -12,4 +12,5 @@ export interface CalendarEvent {
   name: string;
   slots: TimeSlot[];
   color: string;
+  professor?: string;
 }
