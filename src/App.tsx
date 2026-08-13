@@ -13,6 +13,12 @@ import { extractShareHash, decodeShareData, parseSharePayload } from "./utils/sh
 import "./components/PaperSizeModal.css";
 import "./App.css";
 
+declare global {
+  interface Window {
+    __LOAD_START__?: number;
+  }
+}
+
 function loadStoredFamily(): ThemeFamily {
   const v = localStorage.getItem("theme-family");
   return (v && v in THEMES ? v : "default") as ThemeFamily;
@@ -47,6 +53,22 @@ export default function App() {
     localStorage.setItem("theme-family", themeFamily);
     localStorage.setItem("theme-mode", themeMode);
   }, [themeFamily, themeMode]);
+
+  useEffect(() => {
+    const elapsed = performance.now() - (window.__LOAD_START__ ?? performance.now());
+    const delay = Math.max(0, 600 - elapsed);
+    const fadeTimer = setTimeout(() => {
+      const el = document.getElementById("loading-screen");
+      if (el) el.classList.add("leaving");
+    }, delay);
+    const removeTimer = setTimeout(() => {
+      document.getElementById("loading-screen")?.remove();
+    }, delay + 350);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(removeTimer);
+    };
+  }, []);
 
   useEffect(() => {
     const encoded = extractShareHash(window.location.hash);
