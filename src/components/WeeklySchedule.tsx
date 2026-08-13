@@ -3,10 +3,12 @@ import type { CalendarEvent, Day, TimeSlot } from "../types";
 import { DAYS } from "../types";
 import { parseTime, computeTimeRange, getHourLabels, formatTimeShort } from "../utils/time";
 import { exportAsPNG, exportAsPDF } from "../utils/export";
-import { exportAsTemplate } from "../utils/template";
+import { buildShareUrl, encodeSharePayload } from "../utils/share";
 import { colorForTheme } from "../utils/colors";
 import PaperSizeModal from "./PaperSizeModal";
 import type { PaperSize } from "./PaperSizeModal";
+import ShareModal from "./ShareModal";
+import type { ThemeFamily, ThemeMode } from "./ThemeDropdown";
 import "./WeeklySchedule.css";
 import "./PaperSizeModal.css";
 
@@ -14,8 +16,11 @@ interface Props {
   events: CalendarEvent[];
   onSelectEvent: (event: CalendarEvent) => void;
   onAddNew: () => void;
+  onImport: () => void;
   title: string;
   isDark: boolean;
+  themeFamily: ThemeFamily;
+  themeMode: ThemeMode;
 }
 
 type SlotEntry = { event: CalendarEvent; slot: TimeSlot; slotIndex: number };
@@ -53,9 +58,11 @@ function assignTracks(dayEntries: SlotEntry[]) {
   return { assignment, trackCount: tracks.length };
 }
 
-export default function WeeklySchedule({ events, onSelectEvent, onAddNew, title, isDark }: Props) {
+export default function WeeklySchedule({ events, onSelectEvent, onAddNew, onImport, title, isDark, themeFamily, themeMode }: Props) {
   const scheduleRef = useRef<HTMLDivElement>(null);
   const [pdfModalOpen, setPdfModalOpen] = useState(false);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [sharing, setSharing] = useState(false);
 
   const { timeStart, timeEnd } = useMemo(() => {
     const r = computeTimeRange(events);
@@ -103,9 +110,14 @@ export default function WeeklySchedule({ events, onSelectEvent, onAddNew, title,
 
   if (events.length === 0) {
     return (
-      <div className="schedule-empty" onClick={onAddNew} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter") onAddNew(); }}>
-        <div className="schedule-empty-icon">+</div>
-        <div>Add an event to see your weekly schedule.</div>
+      <div className="schedule-empty-wrapper">
+        <div className="schedule-empty" onClick={onAddNew} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter") onAddNew(); }}>
+          <div className="schedule-empty-icon">+</div>
+          <div>Add an event to see your weekly schedule.</div>
+        </div>
+        <button className="btn-import schedule-empty-import" onClick={onImport}>
+          Import PNG/PDF
+        </button>
       </div>
     );
   }
@@ -164,9 +176,27 @@ export default function WeeklySchedule({ events, onSelectEvent, onAddNew, title,
     return `${displayTitle.replace(/\s+/g, "_")}.${ext}`;
   }
 
+  function schedulePayload() {
+    return JSON.stringify({ title, events });
+  }
+
+  function sharePayload() {
+    return encodeSharePayload({ title, events, themeFamily, themeMode });
+  }
+
+  async function handleShare() {
+    if (sharing) return;
+    setSharing(true);
+    try {
+      setShareUrl(await buildShareUrl(sharePayload()));
+    } finally {
+      setSharing(false);
+    }
+  }
+
   function handlePrintPNG() {
     if (scheduleRef.current) {
-      exportAsPNG(scheduleRef.current, titleFilename("png"));
+      exportAsPNG(scheduleRef.current, titleFilename("png"), schedulePayload());
     }
   }
 
@@ -177,12 +207,8 @@ export default function WeeklySchedule({ events, onSelectEvent, onAddNew, title,
   function handleExportPDF(size: PaperSize) {
     setPdfModalOpen(false);
     if (scheduleRef.current) {
-      exportAsPDF(scheduleRef.current, size, titleFilename("pdf"));
+      exportAsPDF(scheduleRef.current, size, titleFilename("pdf"), schedulePayload());
     }
-  }
-
-  function handleSaveTemplate() {
-    exportAsTemplate(events, title, titleFilename("json"));
   }
 
   return (
@@ -194,8 +220,8 @@ export default function WeeklySchedule({ events, onSelectEvent, onAddNew, title,
         <button onClick={handlePrintPDF} className="btn-export">
           PDF
         </button>
-        <button onClick={handleSaveTemplate} className="btn-export">
-          Save Template
+        <button onClick={handleShare} className="btn-export" disabled={sharing}>
+          Share
         </button>
       </div>
       <div className="schedule-container" ref={scheduleRef}>
@@ -247,6 +273,7 @@ export default function WeeklySchedule({ events, onSelectEvent, onAddNew, title,
         onSelect={handleExportPDF}
         onCancel={() => setPdfModalOpen(false)}
       />
+      <ShareModal open={shareUrl !== null} url={shareUrl ?? ""} onClose={() => setShareUrl(null)} />
     </div>
   );
 }

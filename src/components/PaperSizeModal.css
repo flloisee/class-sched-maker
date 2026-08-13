@@ -28,6 +28,14 @@
   color: var(--text);
 }
 
+.modal-subtitle {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
 .modal-options {
   display: flex;
   flex-direction: column;

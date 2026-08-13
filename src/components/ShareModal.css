@@ -1,0 +1,41 @@
+.modal-card--share {
+  width: 420px;
+  max-width: 90vw;
+}
+
+.share-link-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.share-link-field {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.share-copy-btn {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: 500;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.share-copy-btn:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}

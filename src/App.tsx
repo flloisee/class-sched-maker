@@ -6,7 +6,11 @@ import WeeklySchedule from "./components/WeeklySchedule";
 import ThemeDropdown from "./components/ThemeDropdown";
 import { THEMES } from "./components/ThemeDropdown";
 import type { ThemeFamily, ThemeMode } from "./components/ThemeDropdown";
-import { parseTemplateFile } from "./utils/template";
+import { parseTemplate } from "./utils/template";
+import { extractSchedule } from "./utils/png";
+import { extractScheduleFromPDF } from "./utils/export";
+import { extractShareHash, decodeShareData, parseSharePayload } from "./utils/share";
+import "./components/PaperSizeModal.css";
 import "./App.css";
 
 function loadStoredFamily(): ThemeFamily {
@@ -30,7 +34,11 @@ export default function App() {
   const [scheduleTitle, setScheduleTitle] = useState("");
   const [sheetOpen, setSheetOpen] = useState(false);
   const [sheetView, setSheetView] = useState<"list" | "form">("list");
+  const [importError, setImportError] = useState<string | null>(null);
+  const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dragDepth = useRef(0);
+  const shareRestored = useRef(false);
 
   const [themeFamily, setThemeFamily] = useState<ThemeFamily>(INIT_FAMILY);
   const [themeMode, setThemeMode] = useState<ThemeMode>(INIT_MODE);
@@ -39,6 +47,83 @@ export default function App() {
     localStorage.setItem("theme-family", themeFamily);
     localStorage.setItem("theme-mode", themeMode);
   }, [themeFamily, themeMode]);
+
+  useEffect(() => {
+    const encoded = extractShareHash(window.location.hash);
+    if (!encoded || shareRestored.current) return;
+    shareRestored.current = true;
+    void (async () => {
+      try {
+        const data = parseSharePayload(await decodeShareData(encoded));
+        setEvents(data.events);
+        setScheduleTitle(data.title);
+        if (data.themeFamily && data.themeMode) {
+          const family = data.themeFamily as ThemeFamily;
+          const mode = data.themeMode as ThemeMode;
+          if (family in THEMES && mode in THEMES[family]) {
+            setThemeFamily(family);
+            setThemeMode(mode);
+            document.documentElement.dataset.theme = THEMES[family][mode] ?? "";
+          }
+        }
+        const { origin, pathname, search } = window.location;
+        history.replaceState(null, "", `${origin}${pathname}${search}`);
+      } catch {
+        shareRestored.current = false;
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    function hasFiles(e: DragEvent) {
+      return Array.from(e.dataTransfer?.types ?? []).includes("Files");
+    }
+
+    function handleDragEnter(e: DragEvent) {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      dragDepth.current += 1;
+      setDragActive(true);
+    }
+
+    function handleDragOver(e: DragEvent) {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+    }
+
+    function handleDragLeave(e: DragEvent) {
+      if (!hasFiles(e)) return;
+      dragDepth.current = Math.max(0, dragDepth.current - 1);
+      if (dragDepth.current === 0) setDragActive(false);
+    }
+
+    function handleDrop(e: DragEvent) {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      dragDepth.current = 0;
+      setDragActive(false);
+      const file = e.dataTransfer?.files?.[0];
+      if (file) void importFromFile(file);
+    }
+
+    function handleDragEnd() {
+      dragDepth.current = 0;
+      setDragActive(false);
+    }
+
+    window.addEventListener("dragenter", handleDragEnter);
+    window.addEventListener("dragover", handleDragOver);
+    window.addEventListener("dragleave", handleDragLeave);
+    window.addEventListener("drop", handleDrop);
+    window.addEventListener("dragend", handleDragEnd);
+    return () => {
+      window.removeEventListener("dragenter", handleDragEnter);
+      window.removeEventListener("dragover", handleDragOver);
+      window.removeEventListener("dragleave", handleDragLeave);
+      window.removeEventListener("drop", handleDrop);
+      window.removeEventListener("dragend", handleDragEnd);
+    };
+  }, []);
 
   function toggleMode() {
     const nextMode = themeMode === "light" ? "dark" : "light";
@@ -99,17 +184,48 @@ export default function App() {
     setSheetView("list");
   }
 
-  async function handleImportTemplate(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  async function importFromFile(file: File) {
+    const name = file.name.toLowerCase();
+    if (!name.endsWith(".png") && !name.endsWith(".pdf")) {
+      setImportError("Only PNG and PDF files can be imported.");
+      return;
+    }
+    let text: string;
     try {
-      const data = await parseTemplateFile(file);
+      if (name.endsWith(".png")) {
+        try {
+          text = await extractSchedule(file);
+        } catch {
+          setImportError("This image does not contain an embedded schedule.");
+          return;
+        }
+      } else {
+        try {
+          text = extractScheduleFromPDF(new Uint8Array(await file.arrayBuffer()));
+        } catch {
+          setImportError("This PDF does not contain an embedded schedule.");
+          return;
+        }
+      }
+      let data;
+      try {
+        data = parseTemplate(text);
+      } catch {
+        setImportError("The schedule data embedded in this file is not valid JSON.");
+        return;
+      }
       setEvents(data.events);
       setScheduleTitle(data.title ?? "");
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "Import failed");
+    } catch {
+      setImportError("Could not read the selected file.");
     }
+  }
+
+  function handleImportFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
     e.target.value = "";
+    void importFromFile(file);
   }
 
   return (
@@ -174,16 +290,16 @@ export default function App() {
         <EventList events={events} onDelete={handleDelete} onSelectEvent={handleSelectEvent} />
         <input
           type="file"
-          accept=".json"
+          accept=".png,.pdf"
           ref={fileInputRef}
-          onChange={handleImportTemplate}
+          onChange={handleImportFile}
           style={{ display: "none" }}
         />
         <button
           className="btn-import"
           onClick={() => fileInputRef.current?.click()}
         >
-          Import Template
+          Import PNG/PDF
         </button>
       </div>
 
@@ -211,16 +327,16 @@ export default function App() {
               <EventList events={events} onDelete={handleDelete} onSelectEvent={handleSelectEvent} />
               <input
                 type="file"
-                accept=".json"
+                accept=".png,.pdf"
                 ref={fileInputRef}
-                onChange={handleImportTemplate}
+                onChange={handleImportFile}
                 style={{ display: "none" }}
               />
               <button
                 className="btn-import"
                 onClick={() => fileInputRef.current?.click()}
               >
-                Import Template
+                Import PNG/PDF
               </button>
             </>
           ) : (
@@ -235,8 +351,28 @@ export default function App() {
       </div>
 
       <main className="app-main">
-        <WeeklySchedule events={events} onSelectEvent={handleSelectEvent} onAddNew={handleAddNew} title={scheduleTitle} isDark={themeMode === "dark"} />
+        <WeeklySchedule events={events} onSelectEvent={handleSelectEvent} onAddNew={handleAddNew} onImport={() => fileInputRef.current?.click()} title={scheduleTitle} isDark={themeMode === "dark"} themeFamily={themeFamily} themeMode={themeMode} />
       </main>
+
+      {importError && (
+        <div className="modal-overlay" onClick={() => setImportError(null)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <h2 className="modal-title">Import failed</h2>
+            <p className="modal-subtitle">{importError}</p>
+            <button className="modal-cancel" onClick={() => setImportError(null)}>
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
+      {dragActive && (
+        <div className="drop-overlay">
+          <div className="drop-overlay-card">
+            Drop PNG/PDF to import
+          </div>
+        </div>
+      )}
     </div>
   );
 }

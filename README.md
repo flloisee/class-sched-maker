@@ -76,11 +76,11 @@ npm run dev     # start dev server
 - **PNG** — click **Export PNG** → downloads `schedule.png`
 - **PDF** — click **Export PDF** → pick Letter, Legal, or A4 → downloads `schedule.pdf`
 - Exports capture the current theme (colors, background) and schedule title
+- The schedule data (title + all events) is embedded invisibly in every PNG/PDF export, so a file fully round-trips the schedule
 
-### 💾 Templates (JSON)
-- **Export Template** — sidebar → downloads `schedule-template.json` (title + all events)
-- **Import Template** — pick a `.json` file → replaces the current schedule
-- Templates are portable across browsers and devices
+### 💾 Importing (PNG/PDF)
+- **Import PNG/PDF** — pick an exported `.png` or `.pdf` → replaces the current schedule with the embedded data
+- Plain images/PDFs without an embedded schedule are rejected with a clear message
 
 ### ⌨️ Keyboard shortcuts
 - `Escape` — close dropdowns, cancel editing, close bottom sheet
@@ -93,7 +93,7 @@ npm run dev     # start dev server
 
 ### 🧠 Data persistence
 - Events, theme, and title are **not** auto-saved to `localStorage` (by design)
-- Use **Export Template** to save your work; **Import Template** to restore
+- Use **Export PNG/PDF** to save your work; **Import PNG/PDF** to restore
 
 ### ⏰ Time format
 - Input uses 24-hour format (`HH:MM`)

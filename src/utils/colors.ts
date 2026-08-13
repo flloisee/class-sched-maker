@@ -1,4 +1,4 @@
-const LIGHT_PALETTE = [
+export const LIGHT_PALETTE = [
   "#3B6EA5",
   "#C9583A",
   "#4A8C6F",

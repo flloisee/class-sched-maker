@@ -34,11 +34,12 @@ src/
     EventList.tsx        — event list with delete
     WeeklySchedule.tsx   — 7-column weekly grid + greedy first-fit track layout
     PaperSizeModal.tsx   — PDF paper-size picker (letter/legal/A4)
-  utils/
-    time.ts              — parseTime, formatTime, formatTimeShort, computeTimeRange, getHourLabels, minutesSinceMidnight
-    colors.ts            — 8-color palette, nextColor/resetColorIndex, colorForTheme(hex,isDark) for dark mode
-    export.ts            — PNG (html2canvas) and PDF (jspdf) export
-    template.ts          — JSON schedule template export/import (exportAsTemplate, parseTemplateFile)
+utils/
+      time.ts              — parseTime, formatTime, formatTimeShort, computeTimeRange, getHourLabels, minutesSinceMidnight
+      colors.ts            — 8-color palette, nextColor/resetColorIndex, colorForTheme(hex,isDark) for dark mode
+      export.ts            — PNG (html2canvas) and PDF (jspdf) export; extractScheduleFromPDF reads the /Schedule trailer entry
+      template.ts          — schedule payload parsing for embedded import (ScheduleTemplate, parseTemplate)
+      png.ts               — PNG metadata chunks: embedSchedule(dataUrl,payload) writes an iTXt "Schedule" chunk; extractSchedule(file) reads it back
 ```
 
 ## Key conventions
@@ -50,8 +51,8 @@ src/
 - **Time format**: `"HH:MM"` 24h strings. Display uses `formatTimeShort` (12h, trims `:00`).
 - **Colors**: cyclical 8-color palette in `colors.ts`. Use `nextColor()` for default; `colorForTheme(hex, isDark)` to adapt for dark mode.
 - **Themes**: 5 families (default, ayu, github, dracula, catppuccin) × light/dark. Set via `data-theme` attribute on `<html>`.
-- **Export**: `exportAsPNG(element, filename?)` and `exportAsPDF(element, format?, filename?)`. `format` is `"letter"` | `"legal"` | `"a4"`.
-- **Template I/O**: `exportAsTemplate(events, title, filename?)` downloads JSON; `parseTemplateFile(file)` reads one back.
+- **Export**: `exportAsPNG(element, filename?, payload?)` and `exportAsPDF(element, format?, filename?, payload?)`. `format` is `"letter"` | `"legal"` | `"a4"`. When `payload` is passed, the JSON is embedded in the PNG as an `iTXt` "Schedule" chunk and in the PDF as a `/Schedule <hex>` trailer-dict entry.
+- **Template I/O**: JSON is only carried inside exported PNGs/PDFs (via their `Schedule` chunk/entry); `parseTemplate(text)` parses an embedded payload back on import.
 - **vite config**: `base: '/class-sched-maker/'` — relevant for deployment.
 
 ## Linting
