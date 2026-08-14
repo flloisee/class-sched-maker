@@ -3,6 +3,7 @@ import type { CalendarEvent, Day, TimeSlot } from "../types";
 import { DAYS } from "../types";
 import { parseTime, computeTimeRange, getHourLabels, formatTimeShort } from "../utils/time";
 import { exportAsPNG, exportAsPDF } from "../utils/export";
+import { serializeSchedule } from "../utils/template";
 import { buildShareUrl, encodeSharePayload } from "../utils/share";
 import { colorForTheme } from "../utils/colors";
 import PaperSizeModal from "./PaperSizeModal";
@@ -177,7 +178,7 @@ export default function WeeklySchedule({ events, onSelectEvent, onAddNew, onImpo
   }
 
   function schedulePayload() {
-    return JSON.stringify({ title, events });
+    return serializeSchedule({ title, events });
   }
 
   function sharePayload() {

@@ -22,6 +22,10 @@ function migrateEvent(event: Partial<CalendarEvent> & { startTime?: string; endT
   return event as CalendarEvent;
 }
 
+export function serializeSchedule({ title, events }: ScheduleTemplate): string {
+  return JSON.stringify({ title, events });
+}
+
 export function parseTemplate(text: string): ScheduleTemplate {
   const data = JSON.parse(text);
   if (!Array.isArray(data.events)) {

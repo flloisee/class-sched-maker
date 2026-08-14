@@ -92,7 +92,8 @@ npm run dev     # start dev server
 - **Mobile (<768px)** — bottom sheet for events, full-width schedule; tap **Events** to open
 
 ### 🧠 Data persistence
-- Events, theme, and title are **not** auto-saved to `localStorage` (by design)
+- Events, schedule title, and theme are auto-saved to `localStorage` — your progress survives refreshes and accidental browser closes
+- A shared `#d=` link or an imported PNG/PDF replaces the saved schedule
 - Use **Export PNG/PDF** to save your work; **Import PNG/PDF** to restore
 
 ### ⏰ Time format

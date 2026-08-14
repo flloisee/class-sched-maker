@@ -6,10 +6,11 @@ import WeeklySchedule from "./components/WeeklySchedule";
 import ThemeDropdown from "./components/ThemeDropdown";
 import { THEMES } from "./components/ThemeDropdown";
 import type { ThemeFamily, ThemeMode } from "./components/ThemeDropdown";
-import { parseTemplate } from "./utils/template";
+import { parseTemplate, serializeSchedule } from "./utils/template";
 import { extractSchedule } from "./utils/png";
 import { extractScheduleFromPDF } from "./utils/export";
 import { extractShareHash, decodeShareData, parseSharePayload } from "./utils/share";
+import { resetColorIndex } from "./utils/colors";
 import "./components/PaperSizeModal.css";
 import "./App.css";
 
@@ -30,17 +31,35 @@ function loadStoredMode(family: ThemeFamily): ThemeMode {
   return mode in THEMES[family] ? mode : (Object.keys(THEMES[family]) as ThemeMode[])[0] ?? "light";
 }
 
+const SCHEDULE_KEY = "flloisee-schedule";
+const LEGACY_SCHEDULE_KEY = "schedule";
+
+function loadStoredSchedule(): { events: CalendarEvent[]; title: string } {
+  try {
+    const raw = localStorage.getItem(SCHEDULE_KEY) ?? localStorage.getItem(LEGACY_SCHEDULE_KEY);
+    if (raw) localStorage.removeItem(LEGACY_SCHEDULE_KEY);
+    if (!raw) return { events: [], title: "" };
+    const data = parseTemplate(raw);
+    return { events: data.events, title: data.title ?? "" };
+  } catch {
+    return { events: [], title: "" };
+  }
+}
+
+const INIT_SCHEDULE = loadStoredSchedule();
+
 const INIT_FAMILY = loadStoredFamily();
 const INIT_MODE = loadStoredMode(INIT_FAMILY);
 document.documentElement.dataset.theme = THEMES[INIT_FAMILY][INIT_MODE] ?? "";
 
 export default function App() {
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [events, setEvents] = useState<CalendarEvent[]>(INIT_SCHEDULE.events);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [scheduleTitle, setScheduleTitle] = useState("");
+  const [scheduleTitle, setScheduleTitle] = useState(INIT_SCHEDULE.title);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [sheetView, setSheetView] = useState<"list" | "form">("list");
   const [importError, setImportError] = useState<string | null>(null);
+  const [confirmNewOpen, setConfirmNewOpen] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dragDepth = useRef(0);
@@ -53,6 +72,10 @@ export default function App() {
     localStorage.setItem("theme-family", themeFamily);
     localStorage.setItem("theme-mode", themeMode);
   }, [themeFamily, themeMode]);
+
+  useEffect(() => {
+    localStorage.setItem(SCHEDULE_KEY, serializeSchedule({ title: scheduleTitle, events }));
+  }, [scheduleTitle, events]);
 
   useEffect(() => {
     const elapsed = performance.now() - (window.__LOAD_START__ ?? performance.now());
@@ -206,6 +229,23 @@ export default function App() {
     setSheetView("list");
   }
 
+  function handleNewSchedule() {
+    setConfirmNewOpen(false);
+    setEvents([]);
+    setScheduleTitle("");
+    resetColorIndex();
+    setEditingId(null);
+    setSheetView("list");
+  }
+
+  function handleNewClick() {
+    if (events.length > 0 || scheduleTitle !== "") {
+      setConfirmNewOpen(true);
+    } else {
+      handleNewSchedule();
+    }
+  }
+
   async function importFromFile(file: File) {
     const name = file.name.toLowerCase();
     if (!name.endsWith(".png") && !name.endsWith(".pdf")) {
@@ -263,6 +303,9 @@ export default function App() {
           />
         </div>
         <div className="app-header-controls">
+          <button className="btn-new-schedule" onClick={handleNewClick}>
+            New schedule
+          </button>
           <ThemeDropdown
             themeFamily={themeFamily}
             themeMode={themeMode}
@@ -375,6 +418,25 @@ export default function App() {
       <main className="app-main">
         <WeeklySchedule events={events} onSelectEvent={handleSelectEvent} onAddNew={handleAddNew} onImport={() => fileInputRef.current?.click()} title={scheduleTitle} isDark={themeMode === "dark"} themeFamily={themeFamily} themeMode={themeMode} />
       </main>
+
+      {confirmNewOpen && (
+        <div className="modal-overlay" onClick={() => setConfirmNewOpen(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <h2 className="modal-title">Create a new schedule?</h2>
+            <p className="modal-subtitle">
+              This will replace your current schedule and can't be undone.
+            </p>
+            <div className="modal-confirm-actions">
+              <button className="modal-cancel" onClick={() => setConfirmNewOpen(false)}>
+                Cancel
+              </button>
+              <button className="btn-new-confirm" onClick={handleNewSchedule}>
+                New schedule
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {importError && (
         <div className="modal-overlay" onClick={() => setImportError(null)}>
